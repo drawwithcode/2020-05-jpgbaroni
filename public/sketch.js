@@ -15,7 +15,7 @@ socket.on("mouseBroadcast", otherMouse);
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("red");
+  background("blue");
 }
 
 // Callback function called when a new message comes from the server
