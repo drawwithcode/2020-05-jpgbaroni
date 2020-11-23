@@ -13,18 +13,27 @@ function newConnection() {
 
 socket.on("mouseBroadcast", otherMouse);
 
+function preload(){
+  degrees(radians);
+  // put preload code here
+}
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background("blue");
+  background("black");
+  textFont("texturina");
 }
 
+function windowResized() {
+  resizeCanvas(windowWidth,windowHeight);
+}
 // Callback function called when a new message comes from the server
 // Data parameters will contain the received data
 function otherMouse(data) {
   console.log("received:", data);
   noStroke();
   fill("yellow");
-  ellipse(data.x, data.y, 20);
+  if (t == "ellipse")
+    ellipse(data.x, data.y, 20);
 }
 
 function mouseDragged() {
@@ -34,6 +43,7 @@ function mouseDragged() {
 
   // create an object containing the mouse position
   let message = {
+    t: "ellipse",
     x: mouseX,
     y: mouseY,
   };
