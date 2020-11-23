@@ -10,17 +10,7 @@
   "author": "Michele Mauri",
   "license": "ISC",
   "dependencies": {
-    "Express": "^3.0.1",
     "express": "^4.17.1",
-    "socket.io": "^3.0.3"
-  },
-  "homepage": "https://drawwithcode.github.io/2020-05-jpgbaroni/index.html",
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/drawwithcode/2020-05-jpgbaroni.git"
-  },
-  "bugs": {
-    "url": "https://github.com/drawwithcode/2020-05-jpgbaroni/issues"
+    "socket.io": "^3.0.0"
   }
 }
