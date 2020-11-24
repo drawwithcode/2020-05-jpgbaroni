@@ -14,16 +14,21 @@ let eTools = [];
 let drawingData = [];
 let noclickyet = true;
 let cnv2;
+let icons = [];
+let iconLinks = ["https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/house_1f3e0.png",
+"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/airplane_2708.png",
+"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/train_1f686.png",
+"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/automobile_1f697.png"];
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
 class editingTool {
-  constructor(pos = [0,0], type = "palette", color = color(200), selected = false) {
+  constructor(pos = [0,0], type = "palette", color = color(200), selected = false, iconId = -1) {
     this.color = color;
     this.pos = pos;
     this.width = 48;
-    this.bdist = 8;
+    this.bdist = 4;
     this.bangle = random(0,2*PI);
     this.bwidth = 60;
     this.brotsp = random([-1,1])*random(0.2,1)*PI/4/fps;
@@ -42,17 +47,20 @@ class editingTool {
     ellipse(this.pos[0]+this.bdist*cos(this.bangle),windowHeight+this.pos[1]+this.bdist*sin(this.bangle),this.bwidth);
     fill(this.color);
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
-    if (this.isHover()) {
-      stroke(255);
-      fill(255,255,255,150);
-      ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
-    }
     if (this.type == "move") {
       stroke(0);
       strokeWeight(2);
       fill(0);
       line(this.pos[0]-this.width/3,windowHeight+this.pos[1],this.pos[0]+this.width/3,windowHeight+this.pos[1]);
       line(this.pos[0],windowHeight+this.pos[1]-this.width/3,this.pos[0],windowHeight+this.pos[1]+this.width/3);
+    }
+    if (this.type == "icon") {
+      image(icons[this.iconId],this.pos[0]-this.width/2,windowHeight+this.pos[1]-this.width/2,this.width,this.width);
+    }
+    if (this.isHover()) {
+      stroke(255);
+      fill(255,255,255,150);
+      ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     }
     pop();
   }
@@ -83,8 +91,13 @@ function preload(){
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
   eTools.push(new editingTool([60,-60],"move", color = color(200), selected = true));
-  for (var i = 0; i < paletteColors.length; i++) {
+  let i;
+  for (i = 0; i < paletteColors.length; i++) {
     eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
+  }
+  for (var j = 0; j < iconLinks.length; j++) {
+    eTools.push(new editingTool([120+60*i,-60],"icon",color(200),selected = false, iconId = j));
+    icons.push(loadImage(iconLinks[j]));
   }
 }
 function setup() {
@@ -119,6 +132,18 @@ function mouseClicked() {
       itemeTools.selected = true;
     }
   });
+  if (eTools[selectedTool].type == "icon") {
+    // create an object containing the mouse position
+    let message = {
+      st: selectedTool,
+      x: (mouseX+cameraPosition[0])/cameraZoom,
+      y: (mouseY+cameraPosition[1])/cameraZoom,
+    };
+    // send the object to server,
+    // tag it as "mouse" event
+    socket.emit("mouse", message);
+    drawingData.push(message);
+  }
 }
 function mouseReleased() {
   lastMousePos = [-1,-1];
@@ -140,7 +165,7 @@ function mouseDragged() {
     lastMousePos = [mouseX,mouseY];
     cameraSpeed = [0,0,0];
   }
-  else {
+  else if (eTools[selectedTool].type == "palette") {
     // create an object containing the mouse position
     let message = {
       st: selectedTool,
@@ -193,6 +218,9 @@ function writeColor(image, x, y, red, green, blue, alpha) {
   image.pixels[index + 3] = alpha;
 }
 function draw() {
+  if (!mouseIsPressed) {
+    lastMousePos = [-1,-1];
+  }
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
   background(0);
@@ -227,6 +255,9 @@ function draw() {
       if (eTools[dd.st].type == "palette") {
         fill(eTools[dd.st].color);
         ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],4);
+      }
+      if (eTools[dd.st].type == "icon") {
+        image(icons[eTools[dd.st].iconId],dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],60,60);
       }
     });
     pop();
