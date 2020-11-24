@@ -7,7 +7,7 @@ let world;
 let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
-let lastMousePos = [0,0];
+let lastMousePos = [-1,-1];
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -48,10 +48,16 @@ function otherMouse(data) {
 function mouseClicked() {
   lastMousePos = [mouseX,mouseY];
 }
+function mouseReleased() {
+  lastMousePos = [-1,-1];
+}
 function mouseDragged() {
-  cameraPosition[0] += mouseX-lastMousePos[0];
-  cameraPosition[1] += mouseY-lastMousePos[1];
+  if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
+    cameraPosition[0] -= mouseX-lastMousePos[0];
+    cameraPosition[1] -= mouseY-lastMousePos[1];
+  }
   lastMousePos = [mouseX,mouseY];
+  cameraSpeed = [0,0,0];
   /*console.log("sending: ", mouseX, mouseY);
   noStroke();
   fill(255);
@@ -117,7 +123,7 @@ function draw() {
         fill(255,255,255,(frameCount/fps/secondsPerMessage-i)^0.5*255);
       }
       else {
-        fill(255,255,255,(1-(frameCount/fps/secondsPerMessage-i)*4)*255);
+        fill(255,255,255,(2-(frameCount/fps/secondsPerMessage-i))*255);
       }
       textSize(max(10,(frameCount/fps/secondsPerMessage-i)*100));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
