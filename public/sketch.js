@@ -230,6 +230,7 @@ function draw() {
     });
     pop();*/
     while(drawingData.length>0) {
+      dd = drawingData[0];
       world.loadPixels();
       if (eTools[dd.st].type == "palette") {
         fill(eTools[dd.st].color);
@@ -253,5 +254,3 @@ function draw() {
   }
 
 }
-
-let myp5 = new p5(sketch);
