@@ -8,7 +8,7 @@ let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
-let paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
+let paletteColors;
 let rp;
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -44,7 +44,9 @@ function preload(){
   degrees(radians);
   world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
   // put preload code here
-  for (var i = 0; i < realPalette.length; i++) {
+
+  paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
+  for (var i = 0; i < paletteColors.length; i++) {
     rp = new realPalette(i);
   }
 }
