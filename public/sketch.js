@@ -1,6 +1,6 @@
 // Create a new connection using socket.io (imported in index.html)
 let socket = io();
-let fps = 20;
+let fps = 8;
 let welcomeMessage = ["imagine that","there was no pandemic","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 2.5;
 let world, paintheadmenu, win95topright;
@@ -226,7 +226,7 @@ function draw() {
     drawingData.forEach((dd, idd) => {
       if (eTools[dd.st].type == "palette") {
         fill(eTools[dd.st].color);
-        rect(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],3,3);
+        ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],4);
       }
     });
     pop();
