@@ -3,7 +3,7 @@ let socket = io();
 let fps = 20;
 let welcomeMessage = ["imagine that","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 1.5;
-
+let world;
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
@@ -18,6 +18,7 @@ socket.on("mouseBroadcast", otherMouse);
 
 function preload(){
   degrees(radians);
+  world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
   // put preload code here
 }
 function setup() {
@@ -67,7 +68,7 @@ function draw() {
     push();
     noStroke();
     textAlign(CENTER,CENTER);
-    for (let i = 0; i < sentence.length; i++) {
+    for (let i = 0; i < welcomeMessage.length; i++) {
       fill(255);
       if(frameCount/fps/secondsPerMessage > i) {
         fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
@@ -78,7 +79,7 @@ function draw() {
     pop();
   }
   else {
-
+    image(world,0,0,windowHeight/world.height*world.width,windowHeight)
   }
 
 }
