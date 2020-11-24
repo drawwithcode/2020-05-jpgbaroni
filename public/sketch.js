@@ -40,18 +40,16 @@ class editingTool {
     ellipse(this.pos[0]+this.bdist*cos(this.bangle),windowHeight+this.pos[1]+this.bdist*sin(this.bangle),this.bwidth);
     fill(this.color);
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
-
+    if (this.isHover()) {
+      stroke(255);
+      fill(255,255,255,150);
+      ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
+    }
     if (this.type == "move") {
       stroke(0);
       fill(0);
       line(this.pos[0]-this.width/3,this.pos[1],this.pos[0]+this.width/3,this.pos[1]);
       line(this.pos[0],this.pos[1]-this.width/3,this.pos[0],this.pos[1]+this.width/3);
-    }
-
-    if (this.isHover()) {
-      stroke(255);
-      fill(255,255,255,150);
-      ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     }
     pop();
   }
@@ -215,8 +213,8 @@ function draw() {
       if (dd.t == "palette") {
         push();
         noStroke();
-        fill(t.c);
-        ellipse(t.x*cameraZoom-cameraPosition[0],t.y*cameraZoom-cameraPosition[1],8);
+        fill(dd.c);
+        ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],8);
         pop();
       }
     });
