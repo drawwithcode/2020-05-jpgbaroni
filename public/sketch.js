@@ -109,6 +109,7 @@ function moveCamera() {
 function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
+  lastMousePos = [-1,-1];
 
   if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1) {
     background(0);
@@ -123,9 +124,9 @@ function draw() {
         fill(255,255,255,(frameCount/fps/secondsPerMessage-i)^0.5*255);
       }
       else {
-        fill(255,255,255,(2-(frameCount/fps/secondsPerMessage-i))*255);
+        fill(255,255,255,2*(1.5-(frameCount/fps/secondsPerMessage-i))*255);
       }
-      textSize(max(10,(frameCount/fps/secondsPerMessage-i)*100));
+      textSize(max(0,(frameCount/fps/secondsPerMessage-i)*100));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
