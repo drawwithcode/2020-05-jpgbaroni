@@ -9,7 +9,7 @@ let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
-let rp = [];
+let eTools = [];
 let selectedTool = 0; // TB a number
 let eTools = [];
 let drawingData = [];
@@ -44,6 +44,7 @@ class editingTool {
 
     if (this.type == "move") {
       stroke(0);
+      fill(0);
       line(this.pos[0]-this.width/3,this.pos[1],this.pos[0]+this.width/3,this.pos[1]);
       line(this.pos[0],this.pos[1]-this.width/3,this.pos[0],this.pos[1]+this.width/3);
     }
@@ -81,9 +82,9 @@ function preload(){
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
-  rp.push(new editingTool([50,-50],"move", color = color(200), selected = true));
+  eTools.push(new editingTool([50,-50],"move", color = color(200), selected = true));
   for (var i = 0; i < paletteColors.length; i++) {
-    rp.push(new editingTool([100+50*i,-50],"palette",paletteColors[i]));
+    eTools.push(new editingTool([100+50*i,-50],"palette",paletteColors[i]));
   }
 }
 function setup() {
@@ -104,21 +105,9 @@ function otherMouse(data) {
 
 function mouseClicked() {
   lastMousePos = [mouseX,mouseY];
-  rp.forEach((itemrp, irp) => {
-    if (itemrp.isHover()) {
-      itemrp.selected = ! itemrp.selected;
-      rp.forEach((itemrp2, irp2) => {
-        if (irp != irp2) {
-          itemrp2.selected = false
-        }
-      });
-      if (itemrp.selected) {
-        selectedTool.push("palette");
-        selectedTool.push(itemrp.color);
-      }
-      else if (selectedTool.length > 0 && selectedTool[0] == "palette") {
-        selectedTool = [];
-      }
+  eTools.forEach((itemeTools, ieTools) => {
+    if (itemeTools.isHover()) {
+      selectedTool = ieTools;
     }
   });
 }
@@ -134,14 +123,15 @@ function mouseWheel(event) {
   }
 }
 function mouseDragged() {
-  if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
-    cameraPosition[0] -= mouseX-lastMousePos[0];
-    cameraPosition[1] -= mouseY-lastMousePos[1];
+  if (eTools[selectedTool].type == "move") {
+    if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
+      cameraPosition[0] -= mouseX-lastMousePos[0];
+      cameraPosition[1] -= mouseY-lastMousePos[1];
+    }
+    lastMousePos = [mouseX,mouseY];
+    cameraSpeed = [0,0,0];
   }
-  lastMousePos = [mouseX,mouseY];
-  cameraSpeed = [0,0,0];
-
-  if (eTools[selectedTool].type != "move") {
+  else {
     // create an object containing the mouse position
     let message = {
       t: eTools[selectedTool].type,
@@ -207,7 +197,7 @@ function draw() {
       else {
         fill(255,255,255,2*(1.5-(frameCount/fps/secondsPerMessage-i))*255);
       }
-      textSize(max(1,(frameCount/fps/secondsPerMessage-i)*100));
+      textSize(max(1,(frameCount/fps/secondsPerMessage-i)*80));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
@@ -228,8 +218,8 @@ function draw() {
     });
 
 
-    rp.forEach((itemrp, irp) => {
-      itemrp.printout();
+    eTools.forEach((itemeTools, ieTools) => {
+      itemeTools.printout();
     });
     image(paintheadmenu,0,0,paintheadmenu.width,paintheadmenu.height);
     image(win95topright,windowWidth-win95topright.width,0,win95topright.width,win95topright.height)
