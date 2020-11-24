@@ -106,7 +106,9 @@ function mouseClicked() {
         selectedTool.push("palette");
         selectedTool.push(itemrp.color);
       }
-      break;
+      else if (selectedTool.length > 0 && selectedTool[0] == "palette") {
+        selectedTool = [];
+      }
     }
   });
 }
@@ -214,7 +216,7 @@ function draw() {
     noStroke();
     textAlign(RIGHT,CENTER);
     textSize(20);
-    text("only for creative travellers", windowWidth-10, windowHeight-30);
+    text("only for creative travellers - paint responsibly", windowWidth-10, windowHeight-30);
     pop();
   }
 
