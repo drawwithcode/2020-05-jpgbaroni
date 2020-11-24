@@ -1,6 +1,6 @@
 // Create a new connection using socket.io (imported in index.html)
 let socket = io();
-let fps = 8;
+let fps = 16;
 let welcomeMessage = ["imagine that","there was no pandemic","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 2.5;
 let world, paintheadmenu, win95topright;
@@ -104,6 +104,7 @@ function otherMouse(data) {
 }
 
 function mouseClicked() {
+  lastMousePos = [-1,-1];
   if (noclickyet) {
     noclickyet = false;
   }
@@ -194,7 +195,6 @@ function writeColor(image, x, y, red, green, blue, alpha) {
 function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
-  lastMousePos = [-1,-1];
   background(0);
 
   if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1 && noclickyet) {
