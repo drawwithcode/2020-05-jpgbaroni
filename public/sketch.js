@@ -113,7 +113,7 @@ function draw() {
       if((frameCount/fps/secondsPerMessage-i) < 0) {
         fill(255,255,255,0);
       }
-      elseif((frameCount/fps/secondsPerMessage-i) < 1) {
+      else if((frameCount/fps/secondsPerMessage-i) < 1) {
         fill(255,255,255,(frameCount/fps/secondsPerMessage-i)^0.5*255);
       }
       else {
