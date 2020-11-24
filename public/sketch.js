@@ -7,7 +7,7 @@ let world;
 let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
-
+let lastMousePos = [0,0];
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -45,9 +45,13 @@ function otherMouse(data) {
   if (t == "ellipse")
     ellipse(data.x, data.y, 20);
 }
-
+function mouseClicked() {
+  lastMousePos = [mouseX,mouseY];
+}
 function mouseDragged() {
-
+  cameraPosition[0] += mouseX-lastMousePos[0];
+  cameraPosition[1] += mouseY-lastMousePos[1];
+  lastMousePos = [mouseX,mouseY];
   /*console.log("sending: ", mouseX, mouseY);
   noStroke();
   fill(255);
@@ -106,14 +110,16 @@ function draw() {
     noStroke();
     textAlign(CENTER,CENTER);
     for (let i = 0; i < welcomeMessage.length; i++) {
-      fill(255);
-      if(frameCount/fps/secondsPerMessage > i-1) {
-        fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
+      if((frameCount/fps/secondsPerMessage-i) < 0) {
+        fill(255,255,255,0);
       }
-      if(frameCount/fps/secondsPerMessage < i-2) {
-        fill(255,255,255,frameCount/fps/secondsPerMessage/i*255);
+      elseif((frameCount/fps/secondsPerMessage-i) < 1) {
+        fill(255,255,255,(frameCount/fps/secondsPerMessage-i)^0.5*255);
       }
-      textSize(max(10,frameCount/fps*100-frameCount/fps*secondsPerMessage/i*100));
+      else {
+        fill(255,255,255,(1-(frameCount/fps/secondsPerMessage-i)*4)*255);
+      }
+      textSize(max(10,(frameCount/fps/secondsPerMessage-i)*100));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
