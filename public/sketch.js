@@ -48,6 +48,7 @@ class editingTool {
     }
     if (this.type == "move") {
       stroke(0);
+      strokeWeight(2);
       fill(0);
       line(this.pos[0]-this.width/3,this.pos[1],this.pos[0]+this.width/3,this.pos[1]);
       line(this.pos[0],this.pos[1]-this.width/3,this.pos[0],this.pos[1]+this.width/3);
@@ -131,8 +132,8 @@ function mouseWheel(event) {
 function mouseDragged() {
   if (eTools[selectedTool].type == "move") {
     if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
-      cameraPosition[0] -= (mouseX-lastMousePos[0])*cameraZoom;
-      cameraPosition[1] -= (mouseY-lastMousePos[1])*cameraZoom;
+      cameraPosition[0] -= mouseX-lastMousePos[0];
+      cameraPosition[1] -= mouseY-lastMousePos[1];
     }
     lastMousePos = [mouseX,mouseY];
     cameraSpeed = [0,0,0];
@@ -212,16 +213,15 @@ function draw() {
     push();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
 
+    push();
+    noStroke();
     drawingData.forEach((dd, idd) => {
       if (eTools[dd.st].type == "palette") {
-        push();
-        noStroke();
         fill(eTools[dd.st].color);
         ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],8);
-        pop();
       }
     });
-
+    pop();
 
     eTools.forEach((itemeTools, ieTools) => {
       itemeTools.printout();
