@@ -9,7 +9,6 @@ let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
-let eTools = [];
 let selectedTool = 0; // TB a number
 let eTools = [];
 let drawingData = [];
@@ -82,9 +81,9 @@ function preload(){
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
-  eTools.push(new editingTool([50,-50],"move", color = color(200), selected = true));
+  eTools.push(new editingTool([60,-60],"move", color = color(200), selected = true));
   for (var i = 0; i < paletteColors.length; i++) {
-    eTools.push(new editingTool([100+50*i,-50],"palette",paletteColors[i]));
+    eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
   }
 }
 function setup() {
@@ -224,7 +223,7 @@ function draw() {
     image(paintheadmenu,0,0,paintheadmenu.width,paintheadmenu.height);
     image(win95topright,windowWidth-win95topright.width,0,win95topright.width,win95topright.height)
     fill(255);
-    noStroke();
+    stroke(0,0,0,100);
     textAlign(RIGHT,CENTER);
     textSize(20);
     text("only for creative travellers - paint responsibly", windowWidth-10, windowHeight-30);
