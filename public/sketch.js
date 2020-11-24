@@ -4,6 +4,9 @@ let fps = 20;
 let welcomeMessage = ["imagine that","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 1.5;
 let world;
+let cameraPosition = [500,500];
+let cameraZoom = 4;
+
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
@@ -73,13 +76,16 @@ function draw() {
       if(frameCount/fps/secondsPerMessage > i) {
         fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
       }
-      textSize(frameCount/fps*secondsPerMessage/i*windowHeight/2);
+      if(frameCount/fps/secondsPerMessage < i-1) {
+        fill(255,255,255,0);
+      }
+      textSize(frameCount/fps*secondsPerMessage/i*windowHeight/16);
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
   }
   else {
-    image(world,0,0,windowHeight/world.height*world.width,windowHeight)
+    image(world,-cameraPosition[0]*cameraZoom,-cameraPosition[1]*cameraZoom,cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
   }
 
 }
