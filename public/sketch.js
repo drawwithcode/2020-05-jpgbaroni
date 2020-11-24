@@ -8,9 +8,28 @@ let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
-
+let paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
+let rp;
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
+
+class realPalette {
+  constructor(num) {
+    this.color = paletteColors[num];
+    this.pos = [60*(num+1),-100];
+    this.width = 48;
+    this.bpos = [this.pos[0]+random(-5,5),this.pos[1]+random(-5,5)];
+    this.bwidth = 60;
+  }
+  printout() {
+    push();
+    fill(0);
+    ellipse(this.bpos[0],windowHeight+this.bpos[1],this.bwidth);
+    fill(this.color);
+    ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
+    pop();
+  }
+}
 
 function newConnection() {
   console.log("your id:", socket.id);
@@ -25,6 +44,9 @@ function preload(){
   degrees(radians);
   world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
   // put preload code here
+  for (var i = 0; i < realPalette.length; i++) {
+    rp = new realPalette(i);
+  }
 }
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -50,6 +72,14 @@ function mouseClicked() {
 }
 function mouseReleased() {
   lastMousePos = [-1,-1];
+}
+function mouseWheel(event) {
+  if (event.delta > 0) {
+    cameraZoom -= 0.4;
+  }
+  else if (event.delta < 0) {
+    cameraZoom += 0.4;
+  }
 }
 function mouseDragged() {
   if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
@@ -126,7 +156,7 @@ function draw() {
       else {
         fill(255,255,255,2*(1.5-(frameCount/fps/secondsPerMessage-i))*255);
       }
-      textSize(max(0,(frameCount/fps/secondsPerMessage-i)*100));
+      textSize(max(1,(frameCount/fps/secondsPerMessage-i)*100));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
@@ -134,6 +164,10 @@ function draw() {
   else {
     moveCamera();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
+    rp.forEach((itemrp, irp) => {
+      itemrp.printout();
+    });
+
   }
 
 }
