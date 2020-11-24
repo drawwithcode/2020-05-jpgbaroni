@@ -9,7 +9,7 @@ let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
-let rp;
+let rp = [];
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
@@ -29,6 +29,13 @@ class realPalette {
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     pop();
   }
+  isHover() {
+    let result = false;
+    if (dist(mouseX,mouseY,this.pos[0],windowHeight+this.pos[1]) <= this.width) {
+      result = true;
+    }
+    return result;
+  }
 }
 
 function newConnection() {
@@ -47,7 +54,7 @@ function preload(){
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
   for (var i = 0; i < paletteColors.length; i++) {
-    rp = new realPalette(i);
+    rp.push(new realPalette(i));
   }
 }
 function setup() {
