@@ -63,11 +63,11 @@ function draw() {
   // to create the "fade" effect
   background(0);
 
-  if (frameCount/fps < welcomeMessage.length()*secondsPerMessage+1) {
+  if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1) {
     push();
     noStroke();
     textAlign(CENTER,CENTER);
-    for (let i = 0; i < sentence.length(); i++) {
+    for (let i = 0; i < sentence.length; i++) {
       fill(255);
       if(frameCount/fps/secondsPerMessage > i) {
         fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
