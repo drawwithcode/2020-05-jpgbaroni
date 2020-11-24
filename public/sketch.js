@@ -156,8 +156,8 @@ function moveCamera() {
   cameraPosition[0] += cameraZoom*cameraSpeed[0]/fps;
   cameraPosition[1] += cameraZoom*cameraSpeed[1]/fps;
   cameraZoom += cameraSpeed[2]/fps;
-  if (cameraZoom < 1.2) {
-    cameraZoom = 1.2;
+  if (cameraZoom < 0.5) {
+    cameraZoom = 0.5;
     cameraSpeed[2] = -cameraSpeed[2];
   }
   if (cameraZoom > 4) {
@@ -168,23 +168,23 @@ function moveCamera() {
     cameraPosition[0] = 0;
     cameraSpeed[0] = -cameraSpeed[0];
   }
-  if (cameraPosition[0]>-windowWidth+cameraZoom*windowHeight/world.height*world.width) {
-    cameraPosition[0] = -windowWidth+cameraZoom*windowHeight/world.height*world.width;
+  if (cameraPosition[0]>-windowWidth+cameraZoom*world.width) {
+    cameraPosition[0] = -windowWidth+cameraZoom*world.width;
     cameraSpeed[0] = -cameraSpeed[0];
   }
   if (cameraPosition[1]<0) {
     cameraPosition[1] = 0;
     cameraSpeed[1] = -cameraSpeed[1];
   }
-  if (cameraPosition[1]>-windowHeight+cameraZoom*windowHeight) {
-    cameraPosition[1] = -windowHeight+cameraZoom*windowHeight;
+  if (cameraPosition[1]>-windowHeight+cameraZoom*world.height) {
+    cameraPosition[1] = -windowHeight+cameraZoom*world.height;
     cameraSpeed[1] = -cameraSpeed[1];
   }
 
 }
 
 function writeColor(image, x, y, red, green, blue, alpha) {
-  let index = (x + y * image.width) * 4;
+  let index = (round(x) + round(y) * image.width) * 4;
   image.pixels[index] = red;
   image.pixels[index + 1] = green;
   image.pixels[index + 2] = blue;
@@ -194,9 +194,9 @@ function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
   lastMousePos = [-1,-1];
+  background(0);
 
   if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1 && noclickyet) {
-    background(0);
     push();
     noStroke();
     textAlign(CENTER,CENTER);
@@ -218,7 +218,7 @@ function draw() {
   else {
     moveCamera();
     push();
-    image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
+    image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*world.height,cameraZoom*world.width);
 
     /*push();
     noStroke();
