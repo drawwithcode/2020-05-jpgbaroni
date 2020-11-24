@@ -10,23 +10,27 @@ let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
 let rp = [];
-let selectedTool = [];
+let selectedTool = 0; // TB a number
+let eTools = [];
+let drawingData = [];
+
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
-class realPalette {
-  constructor(num) {
-    this.color = paletteColors[num];
-    this.pos = [60*(num+1),-60];
+class editingTool {
+  constructor(pos = [0,0], type = "palette", color = color(200), selected = false) {
+    this.color = color;
+    this.pos = pos;
     this.width = 48;
-    this.bdist = random(0,8);
+    this.bdist = 8;
     this.bangle = random(0,2*PI);
     this.bwidth = 60;
-    this.brotsp = random(-1,1)*PI/8/fps;
-    this.selected = false;
+    this.brotsp = random([-1,1])*random(0.2,1)*PI/4/fps;
+    this.selected = selected;
+    this.type = type;
   }
   printout() {
-    this.bangle += this.brotsp;
+    this.bangle += this.brotsp; // rotate border
     push();
     noStroke();
     fill(0);
@@ -37,7 +41,15 @@ class realPalette {
     ellipse(this.pos[0]+this.bdist*cos(this.bangle),windowHeight+this.pos[1]+this.bdist*sin(this.bangle),this.bwidth);
     fill(this.color);
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
+
+    if (this.type == "move") {
+      stroke(0);
+      line(this.pos[0]-this.width/3,this.pos[1],this.pos[0]+this.width/3,this.pos[1]);
+      line(this.pos[0],this.pos[1]-this.width/3,this.pos[0],this.pos[1]+this.width/3);
+    }
+
     if (this.isHover()) {
+      stroke(255);
       fill(255,255,255,150);
       ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     }
@@ -45,7 +57,7 @@ class realPalette {
   }
   isHover() {
     let result = false;
-    if (dist(mouseX,mouseY,this.pos[0],windowHeight+this.pos[1]) <= this.width) {
+    if (dist(mouseX,mouseY,this.pos[0],windowHeight+this.pos[1]) <= this.width/2) {
       result = true;
     }
     return result;
@@ -69,8 +81,9 @@ function preload(){
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
+  rp.push(new editingTool([50,-50],"move", color = color(200), selected = true));
   for (var i = 0; i < paletteColors.length; i++) {
-    rp.push(new realPalette(i));
+    rp.push(new editingTool([100+50*i,-50],"palette",paletteColors[i]));
   }
 }
 function setup() {
@@ -86,12 +99,9 @@ function windowResized() {
 // Callback function called when a new message comes from the server
 // Data parameters will contain the received data
 function otherMouse(data) {
-  console.log("received:", data);
-  noStroke();
-  fill("yellow");
-  if (t == "ellipse")
-    ellipse(data.x, data.y, 20);
+  drawingData.push(data);
 }
+
 function mouseClicked() {
   lastMousePos = [mouseX,mouseY];
   rp.forEach((itemrp, irp) => {
@@ -130,21 +140,20 @@ function mouseDragged() {
   }
   lastMousePos = [mouseX,mouseY];
   cameraSpeed = [0,0,0];
-  /*console.log("sending: ", mouseX, mouseY);
-  noStroke();
-  fill(255);
 
-  // create an object containing the mouse position
-  let message = {
-    t: "ellipse",
-    x: mouseX,
-    y: mouseY,
-  };
-  // send the object to server,
-  // tag it as "mouse" event
-  socket.emit("mouse", message);
-
-  ellipse(mouseX, mouseY, 20);*/
+  if (eTools[selectedTool].type != "move") {
+    // create an object containing the mouse position
+    let message = {
+      t: eTools[selectedTool].type,
+      c: eTools[selectedTool].color,
+      x: (mouseX+cameraPosition[0])/cameraZoom,
+      y: (mouseY+cameraPosition[1])/cameraZoom,
+    };
+    // send the object to server,
+    // tag it as "mouse" event
+    socket.emit("mouse", message);
+    drawingData.push(message);
+  }
 }
 
 function moveCamera() {
@@ -207,6 +216,18 @@ function draw() {
     moveCamera();
     push();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
+
+    drawingData.forEach((dd, idd) => {
+      if (dd.t == "palette") {
+        push();
+        noStroke();
+        fill(t.c);
+        ellipse(t.x*cameraZoom-cameraPosition[0],t.y*cameraZoom-cameraPosition[1],8);
+        pop();
+      }
+    });
+
+
     rp.forEach((itemrp, irp) => {
       itemrp.printout();
     });
