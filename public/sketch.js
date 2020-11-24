@@ -50,8 +50,8 @@ class editingTool {
       stroke(0);
       strokeWeight(2);
       fill(0);
-      line(this.pos[0]-this.width/3,this.pos[1],this.pos[0]+this.width/3,this.pos[1]);
-      line(this.pos[0],this.pos[1]-this.width/3,this.pos[0],this.pos[1]+this.width/3);
+      line(this.pos[0]-this.width/3,windowHeight+this.pos[1],this.pos[0]+this.width/3,windowHeight+this.pos[1]);
+      line(this.pos[0],windowHeight+this.pos[1]-this.width/3,this.pos[0],windowHeight+this.pos[1]+this.width/3);
     }
     pop();
   }
@@ -183,6 +183,13 @@ function moveCamera() {
 
 }
 
+function writeColor(image, x, y, red, green, blue, alpha) {
+  let index = (x + y * width) * 4;
+  image.pixels[index] = red;
+  image.pixels[index + 1] = green;
+  image.pixels[index + 2] = blue;
+  image.pixels[index + 3] = alpha;
+}
 function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
@@ -213,7 +220,7 @@ function draw() {
     push();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
 
-    push();
+    /*push();
     noStroke();
     drawingData.forEach((dd, idd) => {
       if (eTools[dd.st].type == "palette") {
@@ -221,7 +228,16 @@ function draw() {
         ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],8);
       }
     });
-    pop();
+    pop();*/
+    while(drawingData.length>0) {
+      world.loadPixels();
+      if (eTools[dd.st].type == "palette") {
+        fill(eTools[dd.st].color);
+        writeColor(world,dd.x,dd.y,eTools[dd.st].color.levels[0],eTools[dd.st].color.levels[1],eTools[dd.st].color.levels[2],eTools[dd.st].color.levels[3]);
+      }
+      world.updatePixels();
+      drawingData.shift();
+    }
 
     eTools.forEach((itemeTools, ieTools) => {
       itemeTools.printout();
@@ -237,3 +253,5 @@ function draw() {
   }
 
 }
+
+let myp5 = new p5(sketch);
