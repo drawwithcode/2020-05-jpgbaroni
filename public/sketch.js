@@ -184,7 +184,7 @@ function moveCamera() {
 }
 
 function writeColor(image, x, y, red, green, blue, alpha) {
-  let index = (x + y * width) * 4;
+  let index = (x + y * image.width) * 4;
   image.pixels[index] = red;
   image.pixels[index + 1] = green;
   image.pixels[index + 2] = blue;
@@ -233,7 +233,7 @@ function draw() {
       dd = drawingData[0];
       world.loadPixels();
       if (eTools[dd.st].type == "palette") {
-        fill(eTools[dd.st].color);
+        console.log(dd.x,dd.y);
         writeColor(world,dd.x,dd.y,eTools[dd.st].color.levels[0],eTools[dd.st].color.levels[1],eTools[dd.st].color.levels[2],eTools[dd.st].color.levels[3]);
       }
       world.updatePixels();
