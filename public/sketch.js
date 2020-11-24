@@ -3,7 +3,7 @@ let socket = io();
 let fps = 20;
 let welcomeMessage = ["imagine that","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 2.5;
-let world;
+let world, paintheadmenu;
 let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
@@ -16,7 +16,7 @@ socket.on("connect", newConnection);
 class realPalette {
   constructor(num) {
     this.color = paletteColors[num];
-    this.pos = [60*(num+1),-100];
+    this.pos = [60*(num+1),-60];
     this.width = 48;
     this.bpos = [this.pos[0]+random(-5,5),this.pos[1]+random(-5,5)];
     this.bwidth = 60;
@@ -27,6 +27,10 @@ class realPalette {
     ellipse(this.bpos[0],windowHeight+this.bpos[1],this.bwidth);
     fill(this.color);
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
+    if (this.isHover()) {
+      fill(200,200,200,60);
+      ellipse(this.bpos[0],windowHeight+this.bpos[1],this.bwidth);
+    }
     pop();
   }
   isHover() {
@@ -50,6 +54,7 @@ socket.on("mouseBroadcast", otherMouse);
 function preload(){
   degrees(radians);
   world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
+  paintheadmenu = loadImage("assets/paintheadmenu.png");
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
@@ -172,11 +177,18 @@ function draw() {
   }
   else {
     moveCamera();
+    push();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
     rp.forEach((itemrp, irp) => {
       itemrp.printout();
     });
-
+    image(paintheadmenu,0,0,windowWidth,windowWidth/paintheadmenu.width*paintheadmenu.height);
+    fill(255);
+    noStroke();
+    textAlign(RIGHT,CENTER);
+    textSize(20);
+    text("only for creative coders", windowWidth-10, windowHeight-30);
+    pop();
   }
 
 }
