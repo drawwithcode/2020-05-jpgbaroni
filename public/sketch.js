@@ -79,16 +79,16 @@ function moveCamera() {
     cameraPosition[0] = 0;
     cameraSpeed[0] = -cameraSpeed[0];
   }
-  if (cameraPosition[0]>windowWidth-cameraZoom*windowHeight/world.height*world.width) {
-    cameraPosition[0] = windowWidth-cameraZoom*windowHeight/world.height*world.width;
+  if (cameraPosition[0]>-windowWidth+cameraZoom*windowHeight/world.height*world.width) {
+    cameraPosition[0] = -windowWidth+cameraZoom*windowHeight/world.height*world.width;
     cameraSpeed[0] = -cameraSpeed[0];
   }
   if (cameraPosition[1]<0) {
     cameraPosition[1] = 0;
     cameraSpeed[1] = -cameraSpeed[1];
   }
-  if (cameraPosition[1]>windowHeight-cameraZoom*windowHeight) {
-    cameraPosition[1] = windowHeight-cameraZoom*windowHeight;
+  if (cameraPosition[1]>-windowHeight+cameraZoom*windowHeight) {
+    cameraPosition[1] = -windowHeight+cameraZoom*windowHeight;
     cameraSpeed[1] = -cameraSpeed[1];
   }
 
