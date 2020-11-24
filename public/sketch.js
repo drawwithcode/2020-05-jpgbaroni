@@ -107,6 +107,11 @@ function mouseClicked() {
   eTools.forEach((itemeTools, ieTools) => {
     if (itemeTools.isHover()) {
       selectedTool = ieTools;
+      eTools.forEach((itemeTools2, ieTools2) => {
+        itemeTools2.selected = false;
+      });
+
+      itemeTools.selected = true;
     }
   });
 }
