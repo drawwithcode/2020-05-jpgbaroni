@@ -12,6 +12,7 @@ let paletteColors;
 let selectedTool = 0; // TB a number
 let eTools = [];
 let drawingData = [];
+let noclickyet = true;
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -101,6 +102,9 @@ function otherMouse(data) {
 }
 
 function mouseClicked() {
+  if (noclickyet) {
+    noclickyet = false;
+  }
   lastMousePos = [mouseX,mouseY];
   eTools.forEach((itemeTools, ieTools) => {
     if (itemeTools.isHover()) {
@@ -127,8 +131,8 @@ function mouseWheel(event) {
 function mouseDragged() {
   if (eTools[selectedTool].type == "move") {
     if (lastMousePos[0] >= 0 && lastMousePos[1] >= 0) {
-      cameraPosition[0] -= mouseX-lastMousePos[0];
-      cameraPosition[1] -= mouseY-lastMousePos[1];
+      cameraPosition[0] -= (mouseX-lastMousePos[0])*cameraZoom;
+      cameraPosition[1] -= (mouseY-lastMousePos[1])*cameraZoom;
     }
     lastMousePos = [mouseX,mouseY];
     cameraSpeed = [0,0,0];
@@ -136,8 +140,7 @@ function mouseDragged() {
   else {
     // create an object containing the mouse position
     let message = {
-      t: eTools[selectedTool].type,
-      c: eTools[selectedTool].color,
+      st: selectedTool,
       x: (mouseX+cameraPosition[0])/cameraZoom,
       y: (mouseY+cameraPosition[1])/cameraZoom,
     };
@@ -184,7 +187,7 @@ function draw() {
   // to create the "fade" effect
   lastMousePos = [-1,-1];
 
-  if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1) {
+  if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1 && noclickyet) {
     background(0);
     push();
     noStroke();
@@ -210,10 +213,10 @@ function draw() {
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
 
     drawingData.forEach((dd, idd) => {
-      if (dd.t == "palette") {
+      if (eTools[dd.st].type == "palette") {
         push();
         noStroke();
-        fill(dd.c);
+        fill(eTools[dd.st].color);
         ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],8);
         pop();
       }
