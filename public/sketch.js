@@ -61,9 +61,9 @@ function mouseDragged() {
 function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
-  background(0);
 
   if (frameCount/fps < welcomeMessage.length*secondsPerMessage+1) {
+    background(0);
     push();
     noStroke();
     textAlign(CENTER,CENTER);
@@ -73,9 +73,12 @@ function draw() {
         fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
       }
       textSize(frameCount/fps*secondsPerMessage/i*windowHeight/2);
-      text(sentence[i], windowWidth/2, windowHeight/2);
+      text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
+  }
+  else {
+
   }
 
 }
