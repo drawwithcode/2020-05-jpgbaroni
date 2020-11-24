@@ -4,8 +4,8 @@ let fps = 20;
 let welcomeMessage = ["imagine that","there was no pandemic","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 2.5;
 let world, paintheadmenu, win95topright;
-let cameraPosition = [2000,500];
-let cameraZoom = 4;
+let cameraPosition = [1000,500];
+let cameraZoom = 1;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
@@ -218,7 +218,7 @@ function draw() {
   else {
     moveCamera();
     push();
-    image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*world.height,cameraZoom*world.width);
+    image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*world.width,cameraZoom*world.height);
 
     /*push();
     noStroke();
