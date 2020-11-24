@@ -8,6 +8,7 @@ let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 
+
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
@@ -46,7 +47,8 @@ function otherMouse(data) {
 }
 
 function mouseDragged() {
-  console.log("sending: ", mouseX, mouseY);
+
+  /*console.log("sending: ", mouseX, mouseY);
   noStroke();
   fill(255);
 
@@ -60,12 +62,12 @@ function mouseDragged() {
   // tag it as "mouse" event
   socket.emit("mouse", message);
 
-  ellipse(mouseX, mouseY, 20);
+  ellipse(mouseX, mouseY, 20);*/
 }
 
 function moveCamera() {
-  cameraPosition[0] += cameraSpeed[0]/fps;
-  cameraPosition[1] += cameraSpeed[1]/fps;
+  cameraPosition[0] += cameraZoom*cameraSpeed[0]/fps;
+  cameraPosition[1] += cameraZoom*cameraSpeed[1]/fps;
   cameraZoom += cameraSpeed[2]/fps;
   if (cameraZoom < 1.2) {
     cameraZoom = 1.2;
@@ -111,7 +113,7 @@ function draw() {
       if(frameCount/fps/secondsPerMessage < i-2) {
         fill(255,255,255,frameCount/fps/secondsPerMessage/i*255);
       }
-      textSize(frameCount/fps*secondsPerMessage/i*windowHeight/16);
+      textSize(max(10,frameCount/fps*100-frameCount/fps*secondsPerMessage/i*100));
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
     }
     pop();
