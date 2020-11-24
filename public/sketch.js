@@ -13,6 +13,7 @@ let selectedTool = 0; // TB a number
 let eTools = [];
 let drawingData = [];
 let noclickyet = true;
+let cnv2;
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -88,6 +89,8 @@ function preload(){
 }
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  cnv2 = createCanvas(windowWidth, windowHeight);
+  cnv2.background(0,0,0,0);
   background("black");
   textFont("texturina");
   frameRate(fps);
