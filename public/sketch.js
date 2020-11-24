@@ -1,15 +1,16 @@
 // Create a new connection using socket.io (imported in index.html)
 let socket = io();
 let fps = 20;
-let welcomeMessage = ["imagine that","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
+let welcomeMessage = ["imagine that","there was no pandemic","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
 let secondsPerMessage = 2.5;
-let world, paintheadmenu;
+let world, paintheadmenu, win95topright;
 let cameraPosition = [2000,500];
 let cameraZoom = 4;
 let cameraSpeed = [10,10,-0.1];
 let lastMousePos = [-1,-1];
 let paletteColors;
 let rp = [];
+let selectedTool = [];
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
 
@@ -18,18 +19,27 @@ class realPalette {
     this.color = paletteColors[num];
     this.pos = [60*(num+1),-60];
     this.width = 48;
-    this.bpos = [this.pos[0]+random(-5,5),this.pos[1]+random(-5,5)];
+    this.bdist = random(0,8);
+    this.bangle = random(0,2*PI);
     this.bwidth = 60;
+    this.brotsp = random(-1,1)*PI/8/fps;
+    this.selected = false;
   }
   printout() {
+    this.bangle += this.brotsp;
     push();
+    noStroke();
     fill(0);
-    ellipse(this.bpos[0],windowHeight+this.bpos[1],this.bwidth);
+    if (this.selected) {
+      stroke(255);
+      strokeWeight(2);
+    }
+    ellipse(this.pos[0]+this.bdist*cos(this.bangle),windowHeight+this.pos[1]+this.bdist*sin(this.bangle),this.bwidth);
     fill(this.color);
     ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     if (this.isHover()) {
-      fill(200,200,200,60);
-      ellipse(this.bpos[0],windowHeight+this.bpos[1],this.bwidth);
+      fill(255,255,255,150);
+      ellipse(this.pos[0],windowHeight+this.pos[1],this.width);
     }
     pop();
   }
@@ -55,6 +65,7 @@ function preload(){
   degrees(radians);
   world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
   paintheadmenu = loadImage("assets/paintheadmenu.png");
+  win95topright = loadImage("win95topright.png");
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
@@ -83,6 +94,21 @@ function otherMouse(data) {
 }
 function mouseClicked() {
   lastMousePos = [mouseX,mouseY];
+  rp.forEach((itemrp, irp) => {
+    if (itemrp.isHover()) {
+      itemrp.selected = ! itemrp.selected;
+      rp.forEach((itemrp2, irp2) => {
+        if (irp != irp2) {
+          itemrp2.selected = false
+        }
+      });
+      if (itemrp.selected) {
+        selectedTool.push("palette");
+        selectedTool.push(itemrp.color);
+      }
+      break;
+    }
+  });
 }
 function mouseReleased() {
   lastMousePos = [-1,-1];
@@ -165,7 +191,7 @@ function draw() {
         fill(255,255,255,0);
       }
       else if((frameCount/fps/secondsPerMessage-i) < 1) {
-        fill(255,255,255,(frameCount/fps/secondsPerMessage-i)^0.5*255);
+        fill(255,255,255,((frameCount/fps/secondsPerMessage-i)*2)^0.5*255);
       }
       else {
         fill(255,255,255,2*(1.5-(frameCount/fps/secondsPerMessage-i))*255);
@@ -182,12 +208,13 @@ function draw() {
     rp.forEach((itemrp, irp) => {
       itemrp.printout();
     });
-    image(paintheadmenu,0,0,windowWidth,windowWidth/paintheadmenu.width*paintheadmenu.height);
+    image(paintheadmenu,0,0,paintheadmenu.width,paintheadmenu.height);
+    image(win95topright,windowWidth-win95topright.width,0,win95topright.width,win95topright.height)
     fill(255);
     noStroke();
     textAlign(RIGHT,CENTER);
     textSize(20);
-    text("only for creative coders", windowWidth-10, windowHeight-30);
+    text("only for creative travellers", windowWidth-10, windowHeight-30);
     pop();
   }
 
