@@ -65,7 +65,7 @@ function preload(){
   degrees(radians);
   world = loadImage("https://upload.wikimedia.org/wikipedia/commons/f/f3/World_map_blank_gmt.png");
   paintheadmenu = loadImage("assets/paintheadmenu.png");
-  win95topright = loadImage("win95topright.png");
+  win95topright = loadImage("assets/win95topright.png");
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
