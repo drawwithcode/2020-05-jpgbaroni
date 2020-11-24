@@ -89,8 +89,6 @@ function preload(){
 }
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  cnv2 = createCanvas(windowWidth, windowHeight);
-  cnv2.background(0,0,0,0);
   background("black");
   textFont("texturina");
   frameRate(fps);
@@ -223,15 +221,16 @@ function draw() {
     push();
     image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*world.width,cameraZoom*world.height);
 
-    /*push();
+    push();
     noStroke();
     drawingData.forEach((dd, idd) => {
       if (eTools[dd.st].type == "palette") {
         fill(eTools[dd.st].color);
-        ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],8);
+        rect(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],3,3);
       }
     });
-    pop();*/
+    pop();
+    /*
     while(drawingData.length>0) {
       dd = drawingData[0];
       world.loadPixels();
@@ -241,7 +240,7 @@ function draw() {
       }
       world.updatePixels();
       drawingData.shift();
-    }
+    }*/
 
     eTools.forEach((itemeTools, ieTools) => {
       itemeTools.printout();
