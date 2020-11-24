@@ -2,10 +2,11 @@
 let socket = io();
 let fps = 20;
 let welcomeMessage = ["imagine that","there was no lockdown","and you could travel","travel everywhere","where would you go?"]
-let secondsPerMessage = 1.5;
+let secondsPerMessage = 2.5;
 let world;
-let cameraPosition = [500,500];
+let cameraPosition = [2000,500];
 let cameraZoom = 4;
+let cameraSpeed = [10,10,-0.1];
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
@@ -62,6 +63,37 @@ function mouseDragged() {
   ellipse(mouseX, mouseY, 20);
 }
 
+function moveCamera() {
+  cameraPosition[0] += cameraSpeed[0]/fps;
+  cameraPosition[1] += cameraSpeed[1]/fps;
+  cameraZoom += cameraSpeed[2]/fps;
+  if (cameraZoom < 1.2) {
+    cameraZoom = 1.2;
+    cameraSpeed[2] = -cameraSpeed[2];
+  }
+  if (cameraZoom > 4) {
+    cameraZoom = 4;
+    cameraSpeed[2] = -cameraSpeed[2];
+  }
+  if (cameraPosition[0]<0) {
+    cameraPosition[0] = 0;
+    cameraSpeed[0] = -cameraSpeed[0];
+  }
+  if (cameraPosition[0]>windowWidth-cameraZoom*windowHeight/world.height*world.width) {
+    cameraPosition[0] = windowWidth-cameraZoom*windowHeight/world.height*world.width;
+    cameraSpeed[0] = -cameraSpeed[0];
+  }
+  if (cameraPosition[1]<0) {
+    cameraPosition[1] = 0;
+    cameraSpeed[1] = -cameraSpeed[1];
+  }
+  if (cameraPosition[1]>windowHeight-cameraZoom*windowHeight) {
+    cameraPosition[1] = windowHeight-cameraZoom*windowHeight;
+    cameraSpeed[1] = -cameraSpeed[1];
+  }
+
+}
+
 function draw() {
   // evert draw cycle, add a background with low opacity
   // to create the "fade" effect
@@ -73,11 +105,11 @@ function draw() {
     textAlign(CENTER,CENTER);
     for (let i = 0; i < welcomeMessage.length; i++) {
       fill(255);
-      if(frameCount/fps/secondsPerMessage > i) {
+      if(frameCount/fps/secondsPerMessage > i-1) {
         fill(255,255,255,max(0,-frameCount/fps/secondsPerMessage+1+i)*255);
       }
-      if(frameCount/fps/secondsPerMessage < i-1) {
-        fill(255,255,255,0);
+      if(frameCount/fps/secondsPerMessage < i-2) {
+        fill(255,255,255,frameCount/fps/secondsPerMessage/i*255);
       }
       textSize(frameCount/fps*secondsPerMessage/i*windowHeight/16);
       text(welcomeMessage[i], windowWidth/2, windowHeight/2);
@@ -85,7 +117,8 @@ function draw() {
     pop();
   }
   else {
-    image(world,-cameraPosition[0]*cameraZoom,-cameraPosition[1]*cameraZoom,cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
+    moveCamera();
+    image(world,-cameraPosition[0],-cameraPosition[1],cameraZoom*windowHeight/world.height*world.width,cameraZoom*windowHeight);
   }
 
 }
