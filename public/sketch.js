@@ -15,10 +15,13 @@ let drawingData = [];
 let noclickyet = true;
 let cnv2;
 let icons = [];
-let iconLinks = ["https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/house_1f3e0.png",
-"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/airplane_2708.png",
-"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/train_1f686.png",
-"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/263/automobile_1f697.png"];
+let iconLinks = [
+"assets/home-button.png",
+"assets/aeroplane.png",
+"assets/car.png",
+"assets/ship.png",
+"assets/railway.png",
+"assets/bed.png"];
 
 // define the function that will be called on a new newConnection
 socket.on("connect", newConnection);
