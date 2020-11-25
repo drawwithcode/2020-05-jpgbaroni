@@ -91,12 +91,12 @@ function preload(){
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
   eTools.push(new editingTool([60,-60],"move", color = color(200), selected = true));
-  let i;
+  var i;
   for (i = 0; i < paletteColors.length; i++) {
     eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
   }
   for (var j = 0; j < iconLinks.length; j++) {
-    eTools.push(new editingTool([120+60*i+60*j,-60],"icon",color = color(200),selected = false, iconId = j));
+    eTools.push(new editingTool([(120 + 60*i + 60*j),-60],"icon",color = color(200,200,200), selected = false, iconId = j));
     icons.push(loadImage(iconLinks[j]));
   }
 }
@@ -281,8 +281,8 @@ function draw() {
     fill(255);
     stroke(0,0,0,100);
     textAlign(RIGHT,CENTER);
-    textSize(20);
-    text("only for creative travellers - paint responsibly", windowWidth-10, windowHeight-30);
+    textSize(10);
+    text("only for creative travellers - paint responsibly - the images belong to their respective authors", windowWidth-10, windowHeight-30);
     pop();
   }
 
