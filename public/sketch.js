@@ -93,13 +93,13 @@ function preload(){
   // put preload code here
 
   paletteColors = [color(200, 10, 10),color(200, 210, 10),color(40, 204, 10),color(10, 40, 200),color(100, 10, 200)];
-  eTools.push(new editingTool([60,-60],"move", color = color(200), selected = true));
+  eTools.push(new editingTool([60,-60],"move", color(200), selected = true));
   var i;
   for (i = 0; i < paletteColors.length; i++) {
     eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
   }
   for (var j = 0; j < iconLinks.length; j++) {
-    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], color = color(200,200,200), "icon" , selected = false, iconId = j));
+    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], color(200,200,200), "icon" , selected = false, iconId = j));
     icons.push(loadImage(iconLinks[j]));
   }
 }
