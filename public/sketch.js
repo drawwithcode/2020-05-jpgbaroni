@@ -99,7 +99,7 @@ function preload(){
     eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
   }
   for (var j = 0; j < iconLinks.length; j++) {
-    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], "icon" , selected = false, iconId = j));
+    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], color = color(200,200,200), "icon" , selected = false, iconId = j));
     icons.push(loadImage(iconLinks[j]));
   }
 }
