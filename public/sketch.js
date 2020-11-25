@@ -59,7 +59,7 @@ class editingTool {
       line(this.pos[0],windowHeight+this.pos[1]-this.width/3,this.pos[0],windowHeight+this.pos[1]+this.width/3);
     }
     if (this.type == "icon") {
-      image(icons[this.iconId],this.pos[0]-this.width/2,windowHeight+this.pos[1]-this.width/2,this.width,this.width);
+      image(icons[this.iconId],this.pos[0]-this.width/4,windowHeight+this.pos[1]-this.width/4,this.width/2,this.width/2);
     }
     if (this.isHover()) {
       stroke(255);
@@ -126,6 +126,7 @@ function mouseClicked() {
     noclickyet = false;
   }
   lastMousePos = [mouseX,mouseY];
+  let menuclick = false;
   eTools.forEach((itemeTools, ieTools) => {
     if (itemeTools.isHover()) {
       selectedTool = ieTools;
@@ -134,9 +135,10 @@ function mouseClicked() {
       });
 
       itemeTools.selected = true;
+      menuclick = true;
     }
   });
-  if (eTools[selectedTool].type == "icon") {
+  if (eTools[selectedTool].type == "icon" && (!menuclick)) {
     // create an object containing the mouse position
     let message = {
       st: selectedTool,
@@ -261,7 +263,7 @@ function draw() {
         ellipse(dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],4);
       }
       if (eTools[dd.st].type == "icon") {
-        image(icons[eTools[dd.st].iconId],dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],60,60);
+        image(icons[eTools[dd.st].iconId],dd.x*cameraZoom-cameraPosition[0],dd.y*cameraZoom-cameraPosition[1],32,32);
       }
     });
     pop();
