@@ -37,6 +37,7 @@ class editingTool {
     this.brotsp = random([-1,1])*random(0.2,1)*PI/4/fps;
     this.selected = selected;
     this.type = type;
+    this.iconId = iconId;
   }
   printout() {
     this.bangle += this.brotsp; // rotate border
