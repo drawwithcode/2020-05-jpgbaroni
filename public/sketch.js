@@ -34,7 +34,7 @@ class editingTool {
     this.bdist = 4;
     this.bangle = random(0,2*PI);
     this.bwidth = 60;
-    this.brotsp = random([-1,1])*random(0.2,1)*PI/4/fps;
+    this.brotsp = random([-1,1])*random(0.2,1)*PI/2/fps;
     this.selected = selected;
     this.type = type;
     this.iconId = iconId;
@@ -100,7 +100,7 @@ function preload(){
     eTools.push(new editingTool([120+60*i,-60],"palette",paletteColors[i]));
   }
   for (var j = 0; j < iconLinks.length; j++) {
-    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], color(200,200,200), "icon" , selected = false, iconId = j));
+    eTools.push(new editingTool([(120 + 60*i + 60*j),-60], "icon", color(200,200,200), selected = false, iconId = j));
     icons.push(loadImage(iconLinks[j]));
   }
 }
@@ -286,7 +286,7 @@ function draw() {
     stroke(0,0,0,100);
     textAlign(RIGHT,CENTER);
     textSize(10);
-    text("only for creative travellers - paint responsibly - the images belong to their respective authors", windowWidth-10, windowHeight-30);
+    text("only for creative travellers - paint responsibly - the images belong to their respective authors", windowWidth-10, windowHeight-15);
     pop();
   }
 
